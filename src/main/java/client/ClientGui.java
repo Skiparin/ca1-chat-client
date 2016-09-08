@@ -209,7 +209,14 @@ public class ClientGui extends javax.swing.JFrame implements Observer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendButtonActionPerformed
-        clientHandlers.submit( () -> client.send(Sendmsg.getText()));
+        String msg = Sendmsg.getText();
+        if(msg.contains(":")){
+            clientHandlers.submit( () -> client.send("MSG:" + msg));
+            Sendmsg.setText("");
+        }else{
+            clientHandlers.submit( () -> client.send("MSG::" + msg));
+            Sendmsg.setText("");
+        }
     }//GEN-LAST:event_SendButtonActionPerformed
 
     private void QuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuitActionPerformed

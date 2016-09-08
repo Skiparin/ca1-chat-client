@@ -10,6 +10,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+    import javax.swing.JOptionPane;
 
 /**
  *
@@ -29,6 +30,18 @@ public class ClientGui extends javax.swing.JFrame implements Observer {
         LoginWindow.setVisible(true);
         ChatWindow.setVisible(false);
         this.client = client;
+        
+       
+this.addWindowListener(new java.awt.event.WindowAdapter() {
+    @Override
+    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+        if (!client.isStopped()){
+            client.send("MSG:: logged out");
+            client.send("LOGOUT");
+        }
+        System.exit(0);
+    }
+});
 
     }
 
@@ -248,6 +261,7 @@ public class ClientGui extends javax.swing.JFrame implements Observer {
     private void IPFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IPFieldActionPerformed
         
     }//GEN-LAST:event_IPFieldActionPerformed
+
 
     /**
      * @param args the command line arguments

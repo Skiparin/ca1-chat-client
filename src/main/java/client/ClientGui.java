@@ -138,7 +138,8 @@ public class ClientGui extends javax.swing.JFrame implements Observer {
             }
         });
 
-        PortField.setText("Please enter Port");
+        PortField.setText("Port number");
+        PortField.setToolTipText("Please enter port");
         PortField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 PortFieldActionPerformed(evt);

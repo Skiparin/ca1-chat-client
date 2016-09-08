@@ -43,7 +43,7 @@ public class ClientTest {
                     try (PrintWriter outClient1 = new PrintWriter(client.getOutputStream());
                             BufferedReader inClient1 = new BufferedReader(new InputStreamReader(client.getInputStream()));) {
                         String message = inClient1.readLine(); //IMPORTANT blocking call
-                        outClient1.println("Welcome");
+                        outClient1.println(message);
                     }
                     try {
                         client.close();
@@ -77,26 +77,25 @@ public class ClientTest {
     // @Test
     // public void hello() {}
     @Test
-    public void connect() throws IOException {
+    public void sendAndRecieve() throws IOException {
         Socket client = new Socket("localhost", 7777);
         Scanner input = new Scanner(client.getInputStream());
         PrintWriter output = new PrintWriter(client.getOutputStream(), true);  //Set to true, to get auto flush behaviour
+        output.write("Message from client");
         new Thread ( () -> {
         String message = input.nextLine();
-        Assert.assertEquals(message, "Welcome");
+        Assert.assertEquals(message, "Message from client");
             
         }).start();
     }
     
     @Test
-    public void send() throws IOException {
+    public void connect() throws IOException {
         Socket client = new Socket("localhost", 7777);
         Scanner input = new Scanner(client.getInputStream());
         PrintWriter output = new PrintWriter(client.getOutputStream(), true);  //Set to true, to get auto flush behaviour
         new Thread ( () -> {
-        String message = input.nextLine();
-        Assert.assertEquals(message, "Welcome");
-            
+        Assert.assertEquals(client.isBound(), true);
         }).start();
     }
     

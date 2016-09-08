@@ -19,12 +19,13 @@ public class ClientGui extends javax.swing.JFrame implements Observer {
 
     /**
      * Creates new form ClientGui
+     * @param client will set the echo client
      */
-    public ClientGui() {
+    public ClientGui(EchoClient client) {
         initComponents();
         LoginWindow.setVisible(true);
         ChatWindow.setVisible(false);
-        client = new EchoClient();
+        this.client = client;
 
     }
 
@@ -265,10 +266,8 @@ public class ClientGui extends javax.swing.JFrame implements Observer {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ClientGui().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+                new ClientGui(new EchoClient()).setVisible(true);
         });
     }
 

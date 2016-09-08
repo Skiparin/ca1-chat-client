@@ -9,24 +9,22 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import shared.ProtocolStrings;
 
 public class EchoClient extends Observable
 {
-  Socket socket;
-  private int port;
+  private Socket socket;
   private InetAddress serverAddress;
   private Scanner input;
   private PrintWriter output;
-  private boolean stopped = true;
-  private String[] usernames;
+  private final AtomicBoolean stopped = new AtomicBoolean(true);
   
   public void connect(String address, int port) throws UnknownHostException, IOException
   {
-    stopped = true;
-    this.port = port;
+    stopped.set(true);
     serverAddress = InetAddress.getByName(address);
     socket = new Socket(serverAddress, port);
     input = new Scanner(socket.getInputStream());
@@ -39,12 +37,12 @@ public class EchoClient extends Observable
   }
   
   public void stop() throws IOException{
-    stopped = true;
+    stopped.set(true);
     output.println(ProtocolStrings.STOP);
   }
   
   public boolean isStopped () {
-      return stopped;
+      return stopped.get();
   }
   
   public void receive()
@@ -59,17 +57,21 @@ public class EchoClient extends Observable
     }
     setChanged();
     notifyObservers(msg);
+    //Why are we calling this recursively? There should be no need.
     receive();
   }
   
-  public static void main(String[] args)
-  {   
+  
+  //Why do we still have a main here?
+  public static void main(String[] args){   
     int port = 7777;
     String ip = "138.68.78.143";
     if(args.length == 2){
       ip = args[0];
       port = Integer.parseInt(args[1]);
-    }
+  }
+    
+    //TODO: Can this be deleted?
 //    try {
 //      EchoClient tester = new EchoClient();      
 //      tester.connect(ip, port);

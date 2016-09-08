@@ -8,6 +8,8 @@ package client;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  *
@@ -16,6 +18,7 @@ import java.util.Observer;
 public class ClientGui extends javax.swing.JFrame implements Observer {
 
     private final EchoClient client;
+    private final ExecutorService clientHandlers = Executors.newCachedThreadPool();
 
     /**
      * Creates new form ClientGui
@@ -206,7 +209,7 @@ public class ClientGui extends javax.swing.JFrame implements Observer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendButtonActionPerformed
-        new Thread(() -> client.send(Sendmsg.getText())).start();
+        clientHandlers.submit( () -> client.send(Sendmsg.getText()));
     }//GEN-LAST:event_SendButtonActionPerformed
 
     private void QuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuitActionPerformed
@@ -225,7 +228,7 @@ public class ClientGui extends javax.swing.JFrame implements Observer {
             ReciveMSG.setText("You are connected");
             client.send("LOGIN:" + UsernameField.getText());
             client.addObserver(this);
-            new Thread(() -> client.receive()).start();
+            clientHandlers.submit( () -> client.receive());
             LoginWindow.setVisible(false);
             ChatWindow.setVisible(true);
         } catch (IOException e) {

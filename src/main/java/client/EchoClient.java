@@ -14,64 +14,62 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import shared.ProtocolStrings;
 
-public class EchoClient extends Observable
-{
-  private Socket socket;
-  private InetAddress serverAddress;
-  private Scanner input;
-  private PrintWriter output;
-  private final AtomicBoolean stopped = new AtomicBoolean(true);
-  
-  public void connect(String address, int port) throws UnknownHostException, IOException
-  {
-    stopped.set(true);
-    serverAddress = InetAddress.getByName(address);
-    socket = new Socket(serverAddress, port);
-    input = new Scanner(socket.getInputStream());
-    output = new PrintWriter(socket.getOutputStream(), true);  //Set to true, to get auto flush behaviour
-  }
-  
-  public void send(String msg)
-  {
-    output.println(msg);
-  }
-  
-  public void stop() throws IOException{
-    stopped.set(true);
-    output.println(ProtocolStrings.STOP);
-  }
-  
-  public boolean isStopped () {
-      return stopped.get();
-  }
-  
-  public void receive()
-  {
-    String msg = input.nextLine();
-    if(msg.equals(ProtocolStrings.STOP)){
-      try {
-        socket.close();
-      } catch (IOException ex) {
-        Logger.getLogger(EchoClient.class.getName()).log(Level.SEVERE, null, ex);
-      }
+public class EchoClient extends Observable {
+
+    private Socket socket;
+    private InetAddress serverAddress;
+    private Scanner input;
+    private PrintWriter output;
+    private final AtomicBoolean stopped = new AtomicBoolean(true);
+
+    public void connect(String address, int port) throws UnknownHostException, IOException {
+        stopped.set(true);
+        serverAddress = InetAddress.getByName(address);
+        socket = new Socket(serverAddress, port);
+        input = new Scanner(socket.getInputStream());
+        output = new PrintWriter(socket.getOutputStream(), true);  //Set to true, to get auto flush behaviour
     }
-    setChanged();
-    notifyObservers(msg);
-    //Why are we calling this recursively? There should be no need.
-    receive();
-  }
-  
-  
-  //Why do we still have a main here?
-  public static void main(String[] args){   
-    int port = 7777;
-    String ip = "138.68.78.143";
-    if(args.length == 2){
-      ip = args[0];
-      port = Integer.parseInt(args[1]);
-  }
-    
-    //TODO: Can this be deleted?
+
+    public void send(String msg) {
+        output.println(msg);
+    }
+
+    public void stop() throws IOException {
+        stopped.set(true);
+        output.println(ProtocolStrings.STOP);
+    }
+
+    public boolean isStopped() {
+        return stopped.get();
+    }
+
+    public void receive() {
+        while (true) {
+            String msg = input.nextLine();
+            if (msg.equals(ProtocolStrings.STOP)) {
+                try {
+                    socket.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(EchoClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            setChanged();
+            notifyObservers(msg);
+        }
+        //Why are we calling this recursively? There should be no need.
+        //receive();
+    }
+
+    //Why do we still have a main here?
+    public static void main(String[] args) {
+        int port = 7777;
+        String ip = "138.68.78.143";
+        if (args.length == 2) {
+            ip = args[0];
+            port = Integer.parseInt(args[1]);
+        }
+
+        //TODO: Can this be deleted?
 //    try {
 //      EchoClient tester = new EchoClient();      
 //      tester.connect(ip, port);
@@ -86,5 +84,5 @@ public class EchoClient extends Observable
 //    } catch (IOException ex) {
 //      Logger.getLogger(EchoClient.class.getName()).log(Level.SEVERE, null, ex);
 //    }
-  }
+    }
 }

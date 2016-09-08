@@ -228,7 +228,8 @@
         </Component>
         <Component class="javax.swing.JTextField" name="PortField">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Please enter Port"/>
+            <Property name="text" type="java.lang.String" value="Port number"/>
+            <Property name="toolTipText" type="java.lang.String" value="Please enter port"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="PortFieldActionPerformed"/>

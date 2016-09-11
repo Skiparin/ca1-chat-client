@@ -267,7 +267,7 @@ public class ClientGui extends javax.swing.JFrame implements Observer {
 
     private void QuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuitActionPerformed
         client.send("MSG:: logged out");
-        client.send("LOGOUT");
+        client.send("LOGOUT:");
         System.exit(0);
     }//GEN-LAST:event_QuitActionPerformed
 

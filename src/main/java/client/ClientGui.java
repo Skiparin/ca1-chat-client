@@ -256,9 +256,11 @@ public class ClientGui extends javax.swing.JFrame implements Observer {
         String msg = Sendmsg.getText();
         if (!checkOnlineUser(list1.getSelectedItems())) {
             clientHandlers.submit(() -> client.send("MSG:" + selectedUsers(list1.getSelectedItems()) + msg));
+            ReciveMSG.append("\n You: " + msg);
             Sendmsg.setText("");
         } else if (checkOnlineUser(list1.getSelectedItems())) {
             clientHandlers.submit(() -> client.send("MSG::" + msg));
+            ReciveMSG.append("\n You: " + msg);
             Sendmsg.setText("");
         }
     }//GEN-LAST:event_SendButtonActionPerformed
